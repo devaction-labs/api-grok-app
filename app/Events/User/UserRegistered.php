@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\{Channel, InteractsWithSockets, PrivateChannel};
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserLoggedIn
+class UserRegistered
 {
     use Dispatchable;
     use InteractsWithSockets;
