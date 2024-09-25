@@ -11,8 +11,7 @@ class TenantFinder extends BaseTenantFinder
     public function findForRequest(Request $request): ?Tenant
     {
 
-        $host = $request->getHost();
-        ds($host);
+        $host      = $request->getHost();
         $subdomain = explode('.', $host)[0];
 
         return Tenant::query()->where('domain', $subdomain)->first();
