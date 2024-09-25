@@ -19,6 +19,7 @@ class TenantFactory extends Factory
     {
         return [
             'name'      => $this->faker->name,
+            'tax_id'    => $this->faker->unique()->uuid,
             'slug'      => $this->faker->slug,
             'domain'    => $this->faker->domainName,
             'is_active' => true,

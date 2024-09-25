@@ -6,8 +6,8 @@ use App\Events\User\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\{AuthRegisterRequest, AuthRequest};
 use App\Models\{Tenant, User};
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\{JsonResponse, Request};
+use Illuminate\Support\Facades\{DB};
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
@@ -30,7 +30,7 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
-        DB::transaction(function () use ($data) {
+        DB::transaction(static function () use ($data) {
             $tenant = Tenant::query()->create([
                 'name'   => $data['tenant_name'],
                 'domain' => $data['tenant_domain'],
@@ -49,5 +49,12 @@ class AuthController extends Controller
         });
 
         return response()->json(['message' => 'User created successfully'], Response::HTTP_CREATED);
+    }
+
+    public function logout(Request $request): JsonResponse
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(['message' => 'Logged out'], Response::HTTP_OK);
     }
 }
