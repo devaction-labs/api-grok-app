@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property string $id
@@ -26,6 +27,7 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
     use HasUlids;
+    use HasApiTokens;
 
     /**
      * The attributes that should be hidden for serialization.

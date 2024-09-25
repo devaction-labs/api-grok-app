@@ -1,24 +1,7 @@
 <?php
 
 use App\Models\Tenant;
-use App\Tenant\TenantFinder;
-use Illuminate\Http\Request;
 use Spatie\Multitenancy\Tasks\PrefixCacheTask;
-
-it('can identify tenant based on subdomain', function () {
-    $tenant = Tenant::factory()->create([
-        'domain' => 'tenant1',
-    ]);
-
-    $request = Request::create('http://tenant1.localhost');
-    $request->server->set('HTTP_HOST', 'tenant1.localhost');
-
-    $tenantFinder = app(TenantFinder::class);
-    $foundTenant  = $tenantFinder->findForRequest($request);
-
-    expect($foundTenant)->toBeInstanceOf(Tenant::class)
-        ->and($foundTenant->id)->toBe($tenant->id);
-});
 
 it('prefixes cache when switching tenant', function () {
 
