@@ -4,14 +4,17 @@ namespace App\Tenant;
 
 use App\Models\Tenant;
 use Illuminate\Http\Request;
-use Spatie\Multitenancy\Contracts\IsTenant;
+use Spatie\Multitenancy\TenantFinder\TenantFinder as BaseTenantFinder;
 
-class TenantFinder extends \Spatie\Multitenancy\TenantFinder\TenantFinder
+class TenantFinder extends BaseTenantFinder
 {
-    public function findForRequest(Request $request): ?IsTenant
+    public function findForRequest(Request $request): ?Tenant
     {
-        $domain = request()->getHost();
 
-        return Tenant::query()->where('domain', $domain)->first();
+        $host = $request->getHost();
+        ds($host);
+        $subdomain = explode('.', $host)[0];
+
+        return Tenant::query()->where('domain', $subdomain)->first();
     }
 }
