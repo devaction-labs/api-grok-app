@@ -10,10 +10,10 @@ class TenantFinder extends BaseTenantFinder
 {
     public function findForRequest(Request $request): ?Tenant
     {
+        if ($user = auth()->user()) {
+            return $user->tenant_id;
+        }
 
-        $host      = $request->getHost();
-        $subdomain = explode('.', $host)[0];
-
-        return Tenant::query()->where('domain', $subdomain)->first();
+        return null;
     }
 }
