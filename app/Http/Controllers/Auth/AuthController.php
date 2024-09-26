@@ -12,6 +12,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
+    /**
+     * Login User
+     *
+     * @param AuthRequest $request
+     * @return JsonResponse
+     */
     public function login(AuthRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -26,6 +32,12 @@ class AuthController extends Controller
         return response()->json(['token' => $token]);
     }
 
+    /**
+     * Register User Tenant
+     *
+     * @param AuthRegisterRequest $request
+     * @return JsonResponse
+     */
     public function register(AuthRegisterRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -51,6 +63,12 @@ class AuthController extends Controller
         return response()->json(['message' => 'User created successfully'], Response::HTTP_CREATED);
     }
 
+    /**
+     * Logout User
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
