@@ -4,7 +4,7 @@ namespace App\Actions\Cnpja;
 
 use App\Contracts\Cnpja\HasCnpjData;
 use App\DTO\Cnpja\CnpjDataDTO;
-use App\Models\Cnpja\{Company, Member, MemberRole, Nature, Person, RegistrationType, Size, TaxCountry, TaxStatus};
+use App\Models\Cnpja\{Company, Country, Member, MemberRole, Nature, Person, RegistrationType, Size, Status};
 use Illuminate\Support\Facades\DB;
 
 class SaveCnpjDataAction
@@ -40,7 +40,7 @@ class SaveCnpjDataAction
                 ]
             );
 
-            $country = TaxCountry::query()->firstOrCreate(
+            $country = Country::query()->firstOrCreate(
                 ['code' => $dto->address->country->id],
                 ['name' => $dto->address->country->name]
             );
@@ -91,7 +91,7 @@ class SaveCnpjDataAction
             }
 
             foreach ($dto->registrations as $registrationDTO) {
-                $status = TaxStatus::query()->firstOrCreate(
+                $status = Status::query()->firstOrCreate(
                     ['code' => $registrationDTO->status->id],
                     ['text' => $registrationDTO->status->text]
                 );
