@@ -22,7 +22,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $remember_token
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property Tenant $tenant_id
+ * @property string $tenant_id
  */
 class User extends Authenticatable implements HasCnpjData
 {

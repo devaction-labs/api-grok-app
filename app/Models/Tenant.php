@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Contracts\Cnpja\HasCnpjData;
+use App\Models\Traits\HasCnpjDataTrait;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,14 +18,25 @@ use Spatie\Multitenancy\Models\Concerns\{ImplementsTenant};
  * @property string $domain
  * @property bool $is_active
  */
-class Tenant extends Model implements IsTenant
+class Tenant extends Model implements IsTenant, HasCnpjData
 {
     use ImplementsTenant;
     use HasFactory;
     use HasUlids;
+    use HasCnpjDataTrait;
 
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getEntityType(): string
+    {
+        return get_class($this);
     }
 }

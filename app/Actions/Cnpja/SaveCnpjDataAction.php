@@ -59,7 +59,7 @@ class SaveCnpjDataAction
                     'city'              => $dto->address->city,
                     'state'             => $dto->address->state,
                     'zip'               => $dto->address->zip,
-                    'tax_country_id'    => $country->id,
+                    'country_id'        => $country->id,
                 ]
             );
 
@@ -107,7 +107,7 @@ class SaveCnpjDataAction
                         'number'               => $registrationDTO->number,
                         'enabled'              => $registrationDTO->enabled,
                         'status_date'          => $registrationDTO->statusDate,
-                        'tax_status_id'        => $status->id,
+                        'status_id'            => $status->id,
                         'registration_type_id' => $type->id,
                     ]
                 );

@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Events\User\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\{AuthRegisterRequest, AuthRequest};
-use App\Models\{Tenant, User};
+use App\Pipelines\Onboarding\OnboardingPipeline;
 use Illuminate\Http\{JsonResponse, Request};
-use Illuminate\Support\Facades\{DB};
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        protected OnboardingPipeline $onboardingPipeline
+    ) {}
+
     /**
      * Login User
      *
@@ -40,25 +42,7 @@ class AuthController extends Controller
      */
     public function register(AuthRegisterRequest $request): JsonResponse
     {
-        $data = $request->validated();
-
-        DB::transaction(static function () use ($data) {
-            $tenant = Tenant::query()->create([
-                'name'   => $data['tenant_name'],
-                'domain' => $data['tenant_domain'],
-                'slug'   => $data['tenant_slug'],
-                'tax_id' => $data['tenant_tax_id'],
-            ]);
-
-            $user = User::query()->create([
-                'name'      => $data['name'],
-                'email'     => $data['email'],
-                'password'  => $data['password'],
-                'tenant_id' => $tenant->id,
-            ]);
-
-            event(new UserRegistered($user));
-        });
+        $this->onboardingPipeline->handle($request);
 
         return response()->json(['message' => 'User created successfully'], Response::HTTP_CREATED);
     }
