@@ -5,7 +5,7 @@ namespace App\Events\User;
 use App\Models\User;
 use Illuminate\Broadcasting\{Channel, InteractsWithSockets, PrivateChannel};
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\{SerializesModels};
 
 class UserRegistered
 {

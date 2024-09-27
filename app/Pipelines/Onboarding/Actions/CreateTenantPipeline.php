@@ -4,11 +4,10 @@ namespace App\Pipelines\Onboarding\Actions;
 
 use App\Models\Tenant;
 use Closure;
-use Illuminate\Http\Request;
 
 class CreateTenantPipeline
 {
-    public function handle(Request $request, Closure $next): mixed
+    public function handle(array $request, Closure $next): mixed
     {
         $tenant = Tenant::query()->firstOrCreate(
             ['tax_id' => $request['tenant_tax_id']],
@@ -20,7 +19,7 @@ class CreateTenantPipeline
             ]
         );
 
-        $request->merge(['tenant' => $tenant]);
+        $request['tenant'] = $tenant;
 
         return $next($request);
     }

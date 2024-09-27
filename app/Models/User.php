@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Contracts\Cnpja\HasCnpjData;
+use App\Models\Scopes\TenantScope;
 use App\Models\Traits\HasCnpjDataTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -41,6 +42,11 @@ class User extends Authenticatable implements HasCnpjData
         'password',
         'remember_token',
     ];
+
+    public static function booted(): void
+    {
+        static::addGlobalScope(new TenantScope());
+    }
 
     public function tenant(): BelongsTo
     {

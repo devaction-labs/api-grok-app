@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\{AuthRegisterRequest, AuthRequest};
+use App\Jobs\Onboarding\OnboardingJob;
 use App\Pipelines\Onboarding\OnboardingPipeline;
 use Illuminate\Http\{JsonResponse, Request};
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +43,9 @@ class AuthController extends Controller
      */
     public function register(AuthRegisterRequest $request): JsonResponse
     {
-        $this->onboardingPipeline->handle($request);
+        $data = $request->validated();
+
+        OnboardingJob::dispatch($data);
 
         return response()->json(['message' => 'User created successfully'], Response::HTTP_CREATED);
     }

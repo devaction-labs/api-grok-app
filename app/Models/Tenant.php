@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Spatie\Multitenancy\Contracts\IsTenant;
-use Spatie\Multitenancy\Models\Concerns\{ImplementsTenant};
 
 /**
  * @property string $id
@@ -18,9 +16,8 @@ use Spatie\Multitenancy\Models\Concerns\{ImplementsTenant};
  * @property string $domain
  * @property bool $is_active
  */
-class Tenant extends Model implements IsTenant, HasCnpjData
+class Tenant extends Model implements HasCnpjData
 {
-    use ImplementsTenant;
     use HasFactory;
     use HasUlids;
     use HasCnpjDataTrait;

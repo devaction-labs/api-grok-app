@@ -4,11 +4,10 @@ namespace App\Pipelines\Onboarding\Actions;
 
 use App\Models\{Tenant, User};
 use Closure;
-use Illuminate\Http\Request;
 
 class CreateUserPipeline
 {
-    public function handle(Request $request, Closure $next): mixed
+    public function handle(array $request, Closure $next): mixed
     {
 
         /** @var Tenant $tenant */
@@ -23,7 +22,8 @@ class CreateUserPipeline
             ]
         );
 
-        $request->merge(['user' => $user]);
+        ds($user);
+        $request['user'] = $user;
 
         return $next($request);
     }
