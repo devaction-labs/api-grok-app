@@ -1,64 +1,41 @@
 <?php
 
-use App\Events\User\UserRegistered;
-use App\Http\Integrations\Cnpja\Requests\ConsultCnpjRequest;
-use App\Http\Integrations\Connector\CnpjaConnector;
-use App\Jobs\Onboarding\OnboardingJob;
-use App\Models\User;
-use Illuminate\Support\Facades\{Event, Queue};
+use App\DTO\Cnpja\CnpjDataDTO;
 
-use function Pest\Laravel\postJson;
+it('can map the CNPJ response to CnpjDataDTO', function () {
+    $mockResponse = getDTOMockCnpjResponse();
 
-use Saloon\Http\Faking\{MockClient, MockResponse};
+    $cnpjDataDTO = CnpjDataDTO::fromArray($mockResponse);
 
-it('dispatches the OnboardingJob and fires UserRegistered event', function () {
-    Queue::fake();
-    Event::fake();
-
-    $data = [
-        'tenant_tax_id' => '12345678901',
-        'tenant_name'   => 'Test Tenant',
-        'tenant_slug'   => 'test-tenant',
-        'tenant_domain' => 'test.com',
-        'name'          => 'Test User',
-        'email'         => 'test@example.com',
-        'password'      => 'password',
-    ];
-
-    postJson(route('onboarding.register'), $data)
-        ->assertStatus(201)
-        ->assertJson(['message' => 'User created successfully']);
-
-    Queue::assertPushed(OnboardingJob::class, function ($job) use ($data) {
-        return $job->data == $data;
-    });
+    expect($cnpjDataDTO->taxId)->toBe('52308857000177')
+        ->and($cnpjDataDTO->company->name)->toBe('52.308.857 ALEX NOGUEIRA DA SILVA')
+        ->and($cnpjDataDTO->mainActivity->id)->toBe(8219999)
+        ->and($cnpjDataDTO->status->text)->toBe('Ativa')
+        ->and($cnpjDataDTO->address->city)->toBe('Feira de Santana')
+        ->and($cnpjDataDTO->address->state)->toBe('BA')
+        ->and($cnpjDataDTO->phones[0]->number)->toBe('99129511')
+        ->and($cnpjDataDTO->sideActivities[0]->id)->toBe(9511800);
 
 });
 
-it('dispatches the UserRegistered event', function () {
-    Event::fake();
+it('can map the CNPJ response to CnpjDataDTO including members', function () {
 
-    $user = User::factory()->create();
+    $mockResponse = getDTOMockCnpjResponse();
 
-    event(new UserRegistered($user));
+    $cnpjDataDTO = CnpjDataDTO::fromArray($mockResponse);
 
-    Event::assertDispatched(UserRegistered::class, function ($event) use ($user) {
-        return $event->user->id === $user->id;
-    });
+    expect($cnpjDataDTO->taxId)->toBe('52308857000177')
+        ->and($cnpjDataDTO->company->name)->toBe('52.308.857 ALEX NOGUEIRA DA SILVA')
+        ->and($cnpjDataDTO->mainActivity->id)->toBe(8219999)
+        ->and($cnpjDataDTO->company->members)->toHaveCount(1);
+
+    $member = $cnpjDataDTO->company->members[0];
+    expect($member->person->name)->toBe('Alex Nogueira da Silva')
+        ->and($member->person->taxId)->toBe('12345678901')
+        ->and($member->role->text)->toBe('Sócio');
 });
 
-it('mocks CNPJ API call and verifies full response', function () {
-
-    (new MockClient([
-        ConsultCnpjRequest::class => MockResponse::make(getMockCnpjResponse(), 200),
-    ]));
-
-    $response = (new CnpjaConnector())->send(new ConsultCnpjRequest('52308857000177'));
-
-    expect($response->json())->toBe(getMockCnpjResponse());
-});
-
-function getMockCnpjResponse(): array
+function getDTOMockCnpjResponse(): array
 {
     return [
         'updated' => '2024-09-14T00:00:00.000Z',
@@ -76,7 +53,22 @@ function getMockCnpjResponse(): array
                 'acronym' => 'ME',
                 'text'    => 'Microempresa',
             ],
-            'members' => [],
+            'members' => [
+                [
+                    'since' => '2023-09-25',
+                    'role'  => [
+                        'id'   => 22,
+                        'text' => 'Sócio',
+                    ],
+                    'person' => [
+                        'id'    => '1d23f872-4212-4996-8d9d-77cfd973a52c',
+                        'name'  => 'Alex Nogueira da Silva',
+                        'type'  => 'NATURAL',
+                        'taxId' => '12345678901',
+                        'age'   => '30-35',
+                    ],
+                ],
+            ],
         ],
         'alias'      => null,
         'founded'    => '2023-09-25',
