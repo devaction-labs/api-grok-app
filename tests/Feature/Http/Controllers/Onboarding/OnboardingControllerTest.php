@@ -50,7 +50,7 @@ it('dispatches the UserRegistered event', function () {
 it('mocks CNPJ API call and verifies full response', function () {
 
     (new MockClient([
-        ConsultCnpjRequest::class => MockResponse::make(getMockCnpjResponse(), 200),
+        ConsultCnpjRequest::class => MockResponse::fixture('52308857000177', 200),
     ]));
 
     $response = (new CnpjaConnector())->send(new ConsultCnpjRequest('52308857000177'));
