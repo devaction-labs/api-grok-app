@@ -14,7 +14,7 @@ class OnboardingJob implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
-        protected array $data
+        public array $data
     ) {}
 
     /**
