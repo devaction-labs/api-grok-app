@@ -11,6 +11,7 @@ use Saloon\Exceptions\Request\{FatalRequestException, RequestException};
 class CreateFiscalPipeline
 {
     /**
+     * @param array<string, mixed> $request
      * @throws FatalRequestException
      * @throws RequestException
      * @throws JsonException
@@ -20,7 +21,9 @@ class CreateFiscalPipeline
         /** @var Tenant $tenant */
         $tenant = $request['tenant'];
 
-        $fiscalData = (new GetCnpjAction())->execute($request['tenant_tax_id']);
+        $tax_tenant_id = toString($request['tenant_tax_id']);
+
+        $fiscalData = (new GetCnpjAction())->execute($tax_tenant_id);
 
         (new SaveCnpjDataAction())->execute($fiscalData, $tenant);
 

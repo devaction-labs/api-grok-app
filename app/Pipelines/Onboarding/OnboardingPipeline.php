@@ -9,6 +9,9 @@ use Illuminate\Pipeline\Pipeline;
 
 class OnboardingPipeline
 {
+    /**
+     * @param array<string, mixed> $request
+     */
     public function handle(array $request): mixed
     {
         return app(Pipeline::class)

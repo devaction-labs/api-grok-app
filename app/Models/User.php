@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Contracts\Cnpja\HasCnpjData;
 use App\Models\Scopes\TenantScope;
 use App\Models\Traits\HasCnpjDataTrait;
+use App\Permission\HasRoles;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,6 +25,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $tenant_id
+ * @property mixed $roles
  */
 class User extends Authenticatable implements HasCnpjData
 {
@@ -32,6 +34,7 @@ class User extends Authenticatable implements HasCnpjData
     use HasUlids;
     use HasApiTokens;
     use HasCnpjDataTrait;
+    use HasRoles;
 
     /**
      * The attributes that should be hidden for serialization.

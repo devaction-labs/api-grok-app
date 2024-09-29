@@ -27,7 +27,7 @@ it('dispatches the OnboardingJob and fires UserRegistered event', function () {
 
     postJson(route('onboarding.register'), $data)
         ->assertStatus(201)
-        ->assertJson(['message' => 'User created successfully']);
+        ->assertJson(['message' => 'Account being created']);
 
     Queue::assertPushed(OnboardingJob::class, function ($job) use ($data) {
         return $job->data == $data;

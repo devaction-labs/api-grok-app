@@ -12,6 +12,6 @@ class CnpjHelper
      */
     public static function sanitize(string $cnpj): string
     {
-        return preg_replace('/\D/', '', $cnpj);
+        return preg_replace('/\D/', '', $cnpj) ?? '';
     }
 }

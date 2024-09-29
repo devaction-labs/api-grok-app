@@ -22,7 +22,6 @@ readonly class CnpjDataDTO
         public ?string $entityType,
         public ?string $entityId
     ) {}
-
     public static function fromArray(array $response, ?string $entityType = null, ?string $entityId = null): self
     {
         return new self(

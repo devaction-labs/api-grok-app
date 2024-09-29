@@ -28,7 +28,12 @@ class AuthController extends Controller
             return response()->json(['message' => 'Unauthorized'], Response::HTTP_FORBIDDEN);
         }
 
-        $user  = auth()->user();
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], Response::HTTP_FORBIDDEN);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json(['token' => $token]);
@@ -42,7 +47,11 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        $user = $request->user();
+
+        if ($user && method_exists($user->currentAccessToken(), 'delete')) {
+            $user->currentAccessToken()->delete();
+        }
 
         return response()->json(['message' => 'Logged out'], Response::HTTP_OK);
     }

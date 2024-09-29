@@ -3,20 +3,17 @@ includes:
 
 parameters:
     ignoreErrors:
-       - '#does not specify its types: TFactory#'
-       - message: '#^Parameter \#1 \$data of method App\\UseCases\\Finance\\Dashboard\\GenerateAreaChartData::formatDataForChart\(\) expects array<string, array<int>>, array<int\|string, array<int>> given\.$#'
-         path: %currentWorkingDirectory%/app/UseCases/Finance/Dashboard/GenerateAreaChartData.php
-    excludePaths:
-        analyse:
-            - %currentWorkingDirectory%/tests
-            - %currentWorkingDirectory%/app/Http/Controllers/Auth/*
-            - %currentWorkingDirectory%/app/Http/Controllers/ProfileController.php
-
+        - '#Method App\\DTO\\.*::__construct\(\) has parameter \$\w+ with no value type specified in iterable type array#'
+        - '#Method App\\DTO\\.*::fromArray\(\) has parameter \$\w+ with no value type specified in iterable type array#'
+        - '#uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types#'
+        - '#return type with generic class Illuminate\\Database\\Eloquent\\Relations\\MorphTo does not specify its types#'
+        - '#return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types#'
+        - '#return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types#'
+        - '#return type with generic class Illuminate\\Database\\Eloquent\\Relations\\MorphMany does not specify its types#'
     noUnnecessaryCollectionCall: false
     paths:
         - app
 
-    # The level 9 is the highest level
     level: 9
 
     treatPhpDocTypesAsCertain: false

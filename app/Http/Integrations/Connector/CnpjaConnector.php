@@ -2,6 +2,7 @@
 
 namespace App\Http\Integrations\Connector;
 
+use JsonException;
 use Saloon\Http\Connector;
 use Saloon\Traits\Plugins\AcceptsJson;
 use Saloon\Traits\RequestProperties\HasHeaders;
@@ -13,10 +14,11 @@ class CnpjaConnector extends Connector
 
     /**
      * The Base URL of the API
+     * @throws JsonException
      */
     public function resolveBaseUrl(): string
     {
-        return config('services.cnpja.url_base');
+        return toString(config('services.cnpja.url_base'));
     }
 
     /**
