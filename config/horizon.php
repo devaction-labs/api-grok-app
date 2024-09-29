@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'middleware' => ['web'],
+    'middleware' => ['web', 'auth.very_basic:username,password'],
 
     /*
     |--------------------------------------------------------------------------

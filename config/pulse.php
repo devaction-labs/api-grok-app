@@ -117,6 +117,7 @@ return [
 
     'middleware' => [
         'web',
+        'auth.very_basic:username,password',
         Authorize::class,
     ],
 
