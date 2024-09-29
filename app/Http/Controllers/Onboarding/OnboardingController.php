@@ -17,6 +17,6 @@ class OnboardingController extends Controller
 
         OnboardingJob::dispatch($data);
 
-        return response()->json(['message' => 'User created successfully'], Response::HTTP_CREATED);
+        return response()->json(['message' => 'Account being created'], Response::HTTP_CREATED);
     }
 }
