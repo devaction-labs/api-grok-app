@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\Queue\QueuePriorityEnum;
 use Illuminate\Support\Str;
 
 return [
@@ -180,34 +181,92 @@ return [
     */
 
     'defaults' => [
-        'supervisor-1' => [
+        'supervisor-high-priority' => [
             'connection'          => 'redis',
-            'queue'               => ['default'],
+            'queue'               => [QueuePriorityEnum::HIGH->value],
             'balance'             => 'auto',
-            'autoScalingStrategy' => 'time',
-            'maxProcesses'        => 1,
+            'minProcesses'        => 1,
+            'maxProcesses'        => 6,
+            'balanceMaxShift'     => 3,
+            'balanceCooldown'     => 2,
+            'autoScalingStrategy' => 'size',
             'maxTime'             => 0,
             'maxJobs'             => 0,
             'memory'              => 128,
-            'tries'               => 1,
+            'tries'               => 3,
             'timeout'             => 60,
+            'nice'                => 0,
+        ],
+        'supervisor-low-priority' => [
+            'connection'          => 'redis',
+            'queue'               => [QueuePriorityEnum::LOW->value, 'default'],
+            'balance'             => 'auto',
+            'minProcesses'        => 1,
+            'maxProcesses'        => 3,
+            'balanceMaxShift'     => 1,
+            'balanceCooldown'     => 3,
+            'autoScalingStrategy' => 'size',
+            'maxTime'             => 0,
+            'maxJobs'             => 0,
+            'memory'              => 128,
+            'tries'               => 3,
+            'timeout'             => 60,
+            'nice'                => 0,
+        ],
+        'supervisor-long-timeout' => [
+            'connection'          => 'redis',
+            'queue'               => [QueuePriorityEnum::LONGTIME->value],
+            'balance'             => 'auto',
+            'minProcesses'        => 1,
+            'maxProcesses'        => 3,
+            'balanceMaxShift'     => 1,
+            'balanceCooldown'     => 3,
+            'autoScalingStrategy' => 'size',
+            'maxTime'             => 0,
+            'maxJobs'             => 0,
+            'memory'              => 128,
+            'tries'               => 2,
+            'timeout'             => 600,
+            'nice'                => 0,
+        ],
+        'supervisor-xml' => [
+            'connection'          => 'redis',
+            'queue'               => [QueuePriorityEnum::ONBOARDING->value],
+            'balance'             => 'auto',
+            'minProcesses'        => 1,
+            'maxProcesses'        => 3,
+            'balanceMaxShift'     => 1,
+            'balanceCooldown'     => 3,
+            'autoScalingStrategy' => 'size',
+            'maxTime'             => 0,
+            'maxJobs'             => 0,
+            'memory'              => 128,
+            'tries'               => 2,
+            'timeout'             => 600,
             'nice'                => 0,
         ],
     ],
 
     'environments' => [
         'production' => [
-            'supervisor-1' => [
-                'maxProcesses'    => 10,
-                'balanceMaxShift' => 1,
-                'balanceCooldown' => 3,
-            ],
+            'supervisor-high-priority' => [],
+            'supervisor-low-priority'  => [],
+            'supervisor-long-timeout'  => [],
+            'supervisor-onboarding'    => [],
+        ],
+
+        'staging' => [
+            'supervisor-high-priority' => [],
+            'supervisor-low-priority'  => [],
+            'supervisor-long-timeout'  => [],
+            'supervisor-onboarding'    => [],
         ],
 
         'local' => [
-            'supervisor-1' => [
-                'maxProcesses' => 3,
-            ],
+            'supervisor-high-priority' => [],
+            'supervisor-low-priority'  => [],
+            'supervisor-long-timeout'  => [],
+            'supervisor-onboarding'    => [],
         ],
     ],
 ];
