@@ -229,7 +229,7 @@ return [
             'timeout'             => 600,
             'nice'                => 0,
         ],
-        'supervisor-xml' => [
+        'supervisor-onboarding' => [
             'connection'          => 'redis',
             'queue'               => [QueuePriorityEnum::ONBOARDING->value],
             'balance'             => 'auto',
