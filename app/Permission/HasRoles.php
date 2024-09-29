@@ -3,6 +3,7 @@
 namespace App\Permission;
 
 use App\Models\Permission\{Permission, Role};
+use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
@@ -15,16 +16,20 @@ use Illuminate\Support\Collection;
 trait HasRoles
 {
     /**
-     * Verifica se o usuário tem um determinado papel.
+     * Atribui uma role específica de um tenant ao usuário.
      *
      * @param string|Role $role
-     * @return bool
+     * @param Tenant $tenant
+     * @return void
      */
-    public function hasRole(string|Role $role): bool
+    public function assignTenantRole(string|Role $role, Tenant $tenant): void
     {
-        $roleName = $role instanceof Role ? $role->name : $role;
+        $roleInstance = $role instanceof Role
+            ? $role
+            : Role::query()->where('name', $role)->where('tenant_id', $tenant->id)->firstOrFail();
 
-        return $this->roles()->where('name', $roleName)->exists();
+        // Anexa a role ao usuário no contexto do tenant
+        $this->roles()->attach($roleInstance);
     }
 
     /**
@@ -35,6 +40,20 @@ trait HasRoles
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    /**
+     * Verifica se o usuário tem um determinado papel.
+     *
+     * @param string|Role $role
+     * @return bool
+     */
+    public function hasRole(string|Role $role): bool
+    {
+        $roleName = $role instanceof Role ? $role->name : $role;
+
+        // Verifica se o usuário tem a role
+        return $this->roles()->where('name', $roleName)->exists();
     }
 
     /**
@@ -50,6 +69,7 @@ trait HasRoles
         /** @var Collection<int, Role> $roles */
         $roles = $this->roles;
 
+        // Verifica se qualquer uma das roles do usuário possui a permissão
         return $roles
             ->flatMap(fn (Role $role): Collection => $role->permissions()->get())
             ->contains('name', $permissionName);
@@ -59,11 +79,19 @@ trait HasRoles
      * Atribui um papel ao usuário.
      *
      * @param string|Role $role
+     * @param Tenant|null $tenant
      * @return void
      */
-    public function assignRole(string|Role $role): void
+    public function assignRole(string|Role $role, Tenant $tenant = null): void
     {
-        $roleInstance = $role instanceof Role ? $role : Role::query()->where('name', $role)->firstOrFail();
+        $roleInstance = $role instanceof Role
+            ? $role
+            : Role::query()->where('name', $role)
+                ->where(function ($query) use ($tenant) {
+                    $query->whereNull('tenant_id')
+                        ->orWhere('tenant_id', optional($tenant)->id);
+                })->firstOrFail();
+
         $this->roles()->attach($roleInstance);
     }
 
@@ -90,7 +118,10 @@ trait HasRoles
      */
     public function removeRole(string|Role $role): void
     {
-        $roleInstance = $role instanceof Role ? $role : Role::query()->where('name', $role)->firstOrFail();
+        $roleInstance = $role instanceof Role
+            ? $role
+            : Role::query()->where('name', $role)->firstOrFail();
+
         $this->roles()->detach($roleInstance);
     }
 }

@@ -2,10 +2,11 @@
 
 namespace Database\Factories\Permission;
 
+use App\Models\Permission\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Permission\Role>
+ * @extends Factory<Role>
  */
 class RoleFactory extends Factory
 {
@@ -17,7 +18,8 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name'      => $this->faker->randomElement(['admin', 'manager', 'user']),
+            'tenant_id' => null,
         ];
     }
 }

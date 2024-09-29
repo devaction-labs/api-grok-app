@@ -2,10 +2,11 @@
 
 namespace Database\Factories\Permission;
 
+use App\Models\Permission\Permission;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Permission\Permission>
+ * @extends Factory<Permission>
  */
 class PermissionFactory extends Factory
 {
@@ -17,7 +18,7 @@ class PermissionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->unique()->word,
         ];
     }
 }
