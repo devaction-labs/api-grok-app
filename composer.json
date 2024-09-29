@@ -11,6 +11,7 @@
         "php": "^8.2|^8.3",
         "ext-simplexml": "*",
         "dedoc/scramble": "^0.11.16",
+        "devaction-labs/filterable-package": "^1.0",
         "laravel/framework": "^11.9",
         "laravel/horizon": "^5.29",
         "laravel/octane": "^2.4",

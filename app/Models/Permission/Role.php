@@ -2,7 +2,9 @@
 
 namespace App\Models\Permission;
 
+use App\Models\Scopes\TenantScope;
 use App\Models\Tenant;
+use DevactionLabs\FilterablePackage\Traits\Filterable;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +20,12 @@ class Role extends Model
 {
     use HasFactory;
     use HasUlids;
+    use Filterable;
+
+    public static function booted(): void
+    {
+        static::addGlobalScope(new TenantScope());
+    }
 
     /**
      * Relacionamento de muitos para muitos com as permissões.
