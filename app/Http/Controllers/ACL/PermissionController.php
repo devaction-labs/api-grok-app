@@ -9,13 +9,16 @@ use DevactionLabs\FilterablePackage\Filter;
 
 class PermissionController extends Controller
 {
+    /**
+     * @return PermissionCollection
+     */
     public function index(): PermissionCollection
     {
         $permission = Permission::query()
             ->filtrable([
                 Filter::like('name', 'name'),
             ])
-            ->paginate();
+            ->customPaginate();
 
         return new PermissionCollection($permission);
     }

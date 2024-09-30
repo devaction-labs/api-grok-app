@@ -212,20 +212,21 @@
         },
         {
             "name": "devaction-labs/filterable-package",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/devaction-labs/filterable-package.git",
-                "reference": "0a94ff60b7331945c3fd957be92c140c069dfdeb"
+                "reference": "ce42fcfb94a7143aec6c5020f143bfe4f6f4423f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/devaction-labs/filterable-package/zipball/0a94ff60b7331945c3fd957be92c140c069dfdeb",
-                "reference": "0a94ff60b7331945c3fd957be92c140c069dfdeb",
+                "url": "https://api.github.com/repos/devaction-labs/filterable-package/zipball/ce42fcfb94a7143aec6c5020f143bfe4f6f4423f",
+                "reference": "ce42fcfb94a7143aec6c5020f143bfe4f6f4423f",
                 "shasum": ""
             },
             "require": {
                 "illuminate/database": "^11.21",
+                "illuminate/http": "^11.25",
                 "illuminate/support": "^11.21",
                 "php": "^8.2.0|^8.3.0"
             },
@@ -263,9 +264,9 @@
             ],
             "support": {
                 "issues": "https://github.com/devaction-labs/filterable-package/issues",
-                "source": "https://github.com/devaction-labs/filterable-package/tree/v1.0.2"
+                "source": "https://github.com/devaction-labs/filterable-package/tree/v1.0.3"
             },
-            "time": "2024-09-29T20:09:22+00:00"
+            "time": "2024-09-30T00:42:17+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
