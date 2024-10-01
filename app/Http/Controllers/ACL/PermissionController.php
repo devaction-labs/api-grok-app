@@ -5,7 +5,7 @@ namespace App\Http\Controllers\ACL;
 use App\Enum\Authorize\PermissionsEnum;
 use App\Exceptions\Authorize\AuthorizationException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ACL\PermissionRequest;
+use App\Http\Requests\ACL\{PermissionRequest, PermissionUpdateRequest};
 use App\Http\Resources\ACL\PermissionCollection;
 use App\Models\Permission\Permission;
 use App\Services\Authorize\AuthorizeAccount;
@@ -46,5 +46,20 @@ class PermissionController extends Controller
 
         return response()->noContent();
 
+    }
+
+    /**
+     *
+     * Update a permission.
+     *
+     * @throws AuthorizationException
+     */
+    public function update(PermissionUpdateRequest $request, Permission $permission): Response
+    {
+        AuthorizeAccount::authorize(PermissionsEnum::EDIT_PERMISSIONS);
+
+        $permission->update($request->validated());
+
+        return response()->noContent();
     }
 }
