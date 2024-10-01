@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Customer;
 
 use App\Enum\Authorize\PermissionsEnum;
 use App\Exceptions\Authorize\AuthorizationException;
+use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\{CustomerStoreRequest, CustomerUpdateRequest};
 use App\Http\Resources\Customer\{CustomerCollection, CustomerResource};
 use App\Models\Customer;
 use App\Services\Authorize\AuthorizeAccount;
 use DevactionLabs\FilterablePackage\Filter;
-use Illuminate\Http\{Response};
+use Illuminate\Http\{JsonResponse};
+use Symfony\Component\HttpFoundation\Response;
 
 class CustomerController extends Controller
 {
@@ -41,7 +43,7 @@ class CustomerController extends Controller
      * Store a newly created resource in storage.
      * @throws AuthorizationException
      */
-    public function store(CustomerStoreRequest $request): Response
+    public function store(CustomerStoreRequest $request): JsonResponse
     {
         AuthorizeAccount::authorize(PermissionsEnum::CREATE_CUSTOMERS);
 
@@ -49,7 +51,7 @@ class CustomerController extends Controller
 
         Customer::query()->create($data);
 
-        return response()->noContent();
+        return ResponseHelper::created();
     }
 
     /**
@@ -67,9 +69,11 @@ class CustomerController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * Update the specified resource in storage.
      * @throws AuthorizationException
      */
-    public function update(CustomerUpdateRequest $request, Customer $customer): Response
+    public function update(CustomerUpdateRequest $request, Customer $customer): JsonResponse
     {
         AuthorizeAccount::authorize(PermissionsEnum::EDIT_CUSTOMERS);
 
@@ -77,11 +81,14 @@ class CustomerController extends Controller
 
         $customer->update($data);
 
-        return response()->noContent();
+        return ResponseHelper::updated();
     }
 
     /**
      * Remove the specified resource from storage.
+     *
+     * Remove the specified resource from storage.
+     * @throws AuthorizationException
      */
     public function destroy(Customer $id): Response
     {
@@ -89,6 +96,6 @@ class CustomerController extends Controller
 
         $id->delete();
 
-        return response()->noContent();
+        return ResponseHelper::deleted();
     }
 }

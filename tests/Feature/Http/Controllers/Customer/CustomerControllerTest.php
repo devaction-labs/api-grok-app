@@ -5,6 +5,8 @@ use App\Models\{Customer, Tenant, User};
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas, deleteJson, getJson, postJson, putJson};
 
+use Symfony\Component\HttpFoundation\Response;
+
 beforeEach(function () {
     global $user, $tenant;
 
@@ -55,7 +57,7 @@ it('should be able to create customers', function () {
 
     $response = postJson(route('customers.store'), $customer->toArray());
 
-    $response->assertStatus(204);
+    $response->assertStatus(Response::HTTP_CREATED);
     assertDatabaseHas('customers', ['email' => $customer->email]);
 });
 
@@ -96,7 +98,7 @@ it('should be able to update a customer', function () {
 
     $response = putJson(route('customers.update', $customer->id), ['name' => 'New Name', 'tenant_id' => $tenant->id]);
 
-    $response->assertStatus(204);
+    $response->assertStatus(Response::HTTP_OK);
     assertDatabaseHas('customers', ['name' => 'New Name']);
 });
 
