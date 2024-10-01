@@ -41,6 +41,7 @@ Route::controller(AuthController::class)->group(static function () {
             Route::post('/', [CustomerController::class, 'store'])->name('store');
             Route::get('{customer}', [CustomerController::class, 'show'])->name('show');
             Route::put('{customer}', [CustomerController::class, 'update'])->name('update');
+            Route::delete('{customer}', [CustomerController::class, 'destroy'])->name('destroy');
         });
     });
 });

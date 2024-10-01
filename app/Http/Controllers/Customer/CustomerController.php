@@ -83,8 +83,12 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Customer $id): Response
     {
-        //
+        AuthorizeAccount::authorize(PermissionsEnum::DELETE_CUSTOMERS);
+
+        $id->delete();
+
+        return response()->noContent();
     }
 }

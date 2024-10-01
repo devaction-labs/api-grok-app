@@ -27,4 +27,5 @@ enum PermissionsEnum: string
     case VIEW_CUSTOMERS   = 'customer:view';
     case CREATE_CUSTOMERS = 'customer:create';
     case EDIT_CUSTOMERS   = 'customer:edit';
+    case DELETE_CUSTOMERS = 'customer:delete';
 }

@@ -3,7 +3,7 @@
 use App\Enum\Authorize\PermissionsEnum;
 use App\Models\{Customer, Tenant, User};
 
-use function Pest\Laravel\{actingAs, assertDatabaseHas, getJson, postJson, putJson};
+use function Pest\Laravel\{actingAs, assertDatabaseHas, deleteJson, getJson, postJson, putJson};
 
 beforeEach(function () {
     global $user, $tenant;
@@ -11,7 +11,7 @@ beforeEach(function () {
     $tenant = Tenant::factory()->create();
     $user   = User::factory()
         ->role('Customer', $tenant)
-        ->permissions([PermissionsEnum::VIEW_CUSTOMERS, PermissionsEnum::CREATE_CUSTOMERS, PermissionsEnum::EDIT_CUSTOMERS])
+        ->permissions([PermissionsEnum::VIEW_CUSTOMERS, PermissionsEnum::CREATE_CUSTOMERS, PermissionsEnum::EDIT_CUSTOMERS, PermissionsEnum::DELETE_CUSTOMERS])
         ->create(['tenant_id' => $tenant->id]);
 
 });
@@ -98,4 +98,16 @@ it('should be able to update a customer', function () {
 
     $response->assertStatus(204);
     assertDatabaseHas('customers', ['name' => 'New Name']);
+});
+
+it('should be able to delete a customer', function () {
+    global $user, $tenant;
+
+    actingAs($user);
+
+    $customer = Customer::factory()->create(['tenant_id' => $tenant->id]);
+
+    $response = deleteJson(route('customers.destroy', $customer->id));
+
+    $response->assertStatus(204);
 });
