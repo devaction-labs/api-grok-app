@@ -22,7 +22,7 @@ class CustomerFactory extends Factory
             'email'     => $this->faker->unique()->safeEmail,
             'phone'     => $this->faker->phoneNumber,
             'address'   => $this->faker->address,
-            'tax_id'    => $this->faker->cnpj,
+            'tax_id'    => $this->faker->numerify('###.###.###-##'),
             'city'      => $this->faker->city,
             'state'     => $this->faker->stateAbbr,
             'zipcode'   => $this->faker->postcode,

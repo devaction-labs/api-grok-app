@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ACL\PermissionController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Onboarding\OnboardingController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,13 @@ Route::controller(AuthController::class)->group(static function () {
             Route::post('permissions', [PermissionController::class, 'store'])->name('permissions.store');
             Route::put('permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
             Route::delete('permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+        });
+
+        Route::group([
+            'prefix' => 'customers',
+            'as'     => 'customers.',
+        ], static function () {
+            Route::get('/', [CustomerController::class, 'index'])->name('index');
         });
     });
 });

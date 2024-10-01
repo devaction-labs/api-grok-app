@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Contracts\Cnpja\HasCnpjData;
 use App\Models\Scopes\TenantScope;
 use App\Models\Traits\HasCnpjDataTrait;
+use DevactionLabs\FilterablePackage\Traits\Filterable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,6 +30,7 @@ class Customer extends Model implements HasCnpjData
     use HasFactory;
     use HasUlids;
     use HasCnpjDataTrait;
+    use Filterable;
 
     protected $casts = [
         'is_active' => 'boolean',
@@ -74,6 +76,11 @@ class Customer extends Model implements HasCnpjData
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
     }
 
     /**

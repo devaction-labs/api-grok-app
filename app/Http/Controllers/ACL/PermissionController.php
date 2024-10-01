@@ -64,6 +64,8 @@ class PermissionController extends Controller
     }
 
     /**
+     * Delete a permission.
+     *
      * @throws AuthorizationException
      */
     public function destroy(Permission $permission): Response
