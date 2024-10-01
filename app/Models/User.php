@@ -26,7 +26,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $tenant_id
- * @property mixed $roles
+ * @property string $roles
  */
 class User extends Authenticatable implements HasCnpjData
 {

@@ -15,13 +15,23 @@ trait AuthenticatedUser
      */
     public function getAuthenticatedUser(bool $useCache = true): ?User
     {
-        if ($useCache) {
-            return Cache::remember('authenticated_user', now()->addMinutes(10), function () {
-                return auth()->user();
-            });
+
+        $user = User::query()->where('id', auth()->id())->first();
+
+        if (!$user) {
+            return null;
         }
 
-        return auth()->user();
+        if ($useCache) {
+            /** @var User $cachedUser */
+            $cachedUser = Cache::remember('authenticated_user', now()->addMinutes(5), function () use ($user): User {
+                return $user;
+            });
+
+            return $cachedUser;
+        }
+
+        return $user;
     }
 
     /**

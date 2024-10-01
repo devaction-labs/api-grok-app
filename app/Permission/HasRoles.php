@@ -69,7 +69,6 @@ trait HasRoles
         /** @var Collection<int, Role> $roles */
         $roles = $this->roles;
 
-        // Verifica se qualquer uma das roles do usuário possui a permissão
         return $roles
             ->flatMap(fn (Role $role): Collection => $role->permissions()->get())
             ->contains('name', $permissionName);
@@ -88,8 +87,9 @@ trait HasRoles
             ? $role
             : Role::query()->where('name', $role)
                 ->where(function ($query) use ($tenant) {
+                    $tenantId = $tenant instanceof Tenant ? $tenant->id : null;
                     $query->whereNull('tenant_id')
-                        ->orWhere('tenant_id', optional($tenant)->id);
+                        ->orWhere('tenant_id', $tenantId);
                 })->firstOrFail();
 
         $this->roles()->attach($roleInstance);
