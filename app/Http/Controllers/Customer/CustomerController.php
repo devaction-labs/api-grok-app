@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Customer;
 use App\Enum\Authorize\PermissionsEnum;
 use App\Exceptions\Authorize\AuthorizationException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Customer\CustomerStoreRequest;
-use App\Http\Resources\Customer\CustomerCollection;
+use App\Http\Requests\Customer\{CustomerStoreRequest, CustomerUpdateRequest};
+use App\Http\Resources\Customer\{CustomerCollection, CustomerResource};
 use App\Models\Customer;
 use App\Services\Authorize\AuthorizeAccount;
 use DevactionLabs\FilterablePackage\Filter;
-use Illuminate\Http\{Request, Response};
+use Illuminate\Http\{Response};
 
 class CustomerController extends Controller
 {
@@ -53,19 +53,31 @@ class CustomerController extends Controller
     }
 
     /**
+     * Show the customer.
+     *
      * Display the specified resource.
+     * @throws AuthorizationException
      */
-    public function show(string $id)
+    public function show(Customer $id): CustomerResource
     {
-        //
+        AuthorizeAccount::authorize(PermissionsEnum::VIEW_CUSTOMERS);
+
+        return new CustomerResource($id);
     }
 
     /**
      * Update the specified resource in storage.
+     * @throws AuthorizationException
      */
-    public function update(Request $request, string $id)
+    public function update(CustomerUpdateRequest $request, Customer $customer): Response
     {
-        //
+        AuthorizeAccount::authorize(PermissionsEnum::EDIT_CUSTOMERS);
+
+        $data = $request->validated();
+
+        $customer->update($data);
+
+        return response()->noContent();
     }
 
     /**

@@ -39,6 +39,8 @@ Route::controller(AuthController::class)->group(static function () {
         ], static function () {
             Route::get('/', [CustomerController::class, 'index'])->name('index');
             Route::post('/', [CustomerController::class, 'store'])->name('store');
+            Route::get('{customer}', [CustomerController::class, 'show'])->name('show');
+            Route::put('{customer}', [CustomerController::class, 'update'])->name('update');
         });
     });
 });
