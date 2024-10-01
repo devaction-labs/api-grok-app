@@ -2,9 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\Permission\{Permission, Role};
+use App\Models\{Tenant, User};
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 /**
@@ -12,35 +13,75 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
-    protected static ?string $password;
+    protected static ?string $password = null;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected ?Role $role = null;
+
+    protected array $permissions = [];
+
     public function definition(): array
     {
         return [
             'name'              => fake()->name(),
             'email'             => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password'          => static::$password ??= Hash::make('password'),
+            'password'          => 'password',
             'remember_token'    => Str::random(10),
             'tenant_id'         => TenantFactory::new(),
         ];
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Define uma role específica para o usuário.
+     *
+     * @param string $roleName
+     * @param Tenant|null $tenant
+     * @return $this
      */
-    public function unverified(): static
+    public function role(string $roleName, ?Tenant $tenant = null): static
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
+        $this->role = Role::firstOrCreate([
+            'name'      => $roleName,
+            'tenant_id' => $tenant->id ?? null,
         ]);
+
+        return $this;
+    }
+
+    /**
+     * Sobrescreve o método create para adicionar role e permissões.
+     *
+     * @param array<string, mixed> $attributes
+     * @param Model|null $parent
+     * @return User
+     */
+    public function create($attributes = [], ?Model $parent = null): User
+    {
+        $user = parent::create($attributes, $parent);
+
+        if ($this->role) {
+            /** @var User $user */
+            $user->assignRole($this->role);
+
+            foreach ($this->permissions as $permissionEnum) {
+                $permission = Permission::firstOrCreate(['name' => $permissionEnum->value]);
+                $this->role->permissions()->attach($permission);
+            }
+        }
+
+        return $user;
+    }
+
+    /**
+     * Atribui permissões ao usuário baseado em enums.
+     *
+     * @param array $permissions
+     * @return $this
+     */
+    public function permissions(array $permissions): static
+    {
+        $this->permissions = $permissions;
+
+        return $this;
     }
 }
