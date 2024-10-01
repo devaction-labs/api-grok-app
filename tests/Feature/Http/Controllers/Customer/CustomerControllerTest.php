@@ -3,7 +3,7 @@
 use App\Enum\Authorize\PermissionsEnum;
 use App\Models\{Customer, Tenant, User};
 
-use function Pest\Laravel\{actingAs, getJson};
+use function Pest\Laravel\{actingAs, assertDatabaseHas, getJson, postJson};
 
 beforeEach(function () {
     global $user, $tenant;
@@ -11,7 +11,7 @@ beforeEach(function () {
     $tenant = Tenant::factory()->create();
     $user   = User::factory()
         ->role('Customer', $tenant)
-        ->permissions([PermissionsEnum::VIEW_CUSTOMERS])
+        ->permissions([PermissionsEnum::VIEW_CUSTOMERS, PermissionsEnum::CREATE_CUSTOMERS])
         ->create(['tenant_id' => $tenant->id]);
 
 });
@@ -44,4 +44,17 @@ it('should return a list of customers', function () {
             ],
         ],
     ]);
+});
+
+it('should be able to create customers', function () {
+    global $user, $tenant;
+
+    actingAs($user);
+
+    $customer = Customer::factory()->make(['tenant_id' => $tenant->id]);
+
+    $response = postJson(route('customers.store'), $customer->toArray());
+
+    $response->assertStatus(204);
+    assertDatabaseHas('customers', ['email' => $customer->email]);
 });

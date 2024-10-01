@@ -38,6 +38,7 @@ Route::controller(AuthController::class)->group(static function () {
             'as'     => 'customers.',
         ], static function () {
             Route::get('/', [CustomerController::class, 'index'])->name('index');
+            Route::post('/', [CustomerController::class, 'store'])->name('store');
         });
     });
 });

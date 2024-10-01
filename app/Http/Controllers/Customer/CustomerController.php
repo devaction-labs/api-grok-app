@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Customer;
 use App\Enum\Authorize\PermissionsEnum;
 use App\Exceptions\Authorize\AuthorizationException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Customer\CustomerStoreRequest;
 use App\Http\Resources\Customer\CustomerCollection;
 use App\Models\Customer;
 use App\Services\Authorize\AuthorizeAccount;
 use DevactionLabs\FilterablePackage\Filter;
-use Illuminate\Http\Request;
+use Illuminate\Http\{Request, Response};
 
 class CustomerController extends Controller
 {
@@ -35,11 +36,20 @@ class CustomerController extends Controller
     }
 
     /**
+     * List all customers.
+     *
      * Store a newly created resource in storage.
+     * @throws AuthorizationException
      */
-    public function store(Request $request)
+    public function store(CustomerStoreRequest $request): Response
     {
-        //
+        AuthorizeAccount::authorize(PermissionsEnum::CREATE_CUSTOMERS);
+
+        $data = $request->validated();
+
+        Customer::query()->create($data);
+
+        return response()->noContent();
     }
 
     /**
