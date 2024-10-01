@@ -62,4 +62,16 @@ class PermissionController extends Controller
 
         return response()->noContent();
     }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function destroy(Permission $permission): Response
+    {
+        AuthorizeAccount::authorize(PermissionsEnum::DELETE_PERMISSIONS);
+
+        $permission->delete();
+
+        return response()->noContent();
+    }
 }

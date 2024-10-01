@@ -3,7 +3,7 @@
 use App\Enum\Authorize\PermissionsEnum;
 use App\Models\{Permission\Permission, Permission\Role, Tenant, User};
 
-use function Pest\Laravel\{actingAs, getJson, postJson, putJson};
+use function Pest\Laravel\{actingAs, deleteJson, getJson, postJson, putJson};
 
 it('should be able to list all permissions', function () {
     $tenant = Tenant::factory()->create();
@@ -64,6 +64,27 @@ it('should be able to updated permission', function () {
     $response = putJson(route('acle.permissions.update', ['permission' => $permission]), [
         'name' => 'new:permission',
     ]);
+
+    $response->assertNoContent();
+});
+
+it('should be able to delete permissions', function () {
+    $tenant = Tenant::factory()->create();
+    $user   = User::factory()
+        ->role('Manager', $tenant)
+        ->permissions([PermissionsEnum::DELETE_PERMISSIONS])
+        ->create([
+            'tenant_id' => $tenant->id,
+        ]);
+
+    actingAs($user);
+
+    $role       = Role::factory()->create(['tenant_id' => $tenant->id]);
+    $permission = Permission::factory()->create(['name' => 'permission:old']);
+
+    $role->permissions()->attach($permission);
+
+    $response = deleteJson(route('acle.permissions.destroy', ['permission' => $permission]));
 
     $response->assertNoContent();
 });
