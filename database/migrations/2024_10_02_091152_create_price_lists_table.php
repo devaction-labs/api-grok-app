@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Tenant;
+use App\Models\{PriceList, SkuUnit, Tenant};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,8 +21,8 @@ return new class() extends Migration {
         // Pivot table for price_list and sku_units
         Schema::create('price_list_sku', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignId('sku_id')->constrained('sku_units');
-            $table->foreignId('price_list_id')->constrained('price_lists');
+            $table->foreignIdFor(SkuUnit::class)->constrained();
+            $table->foreignIdFor(PriceList::class)->constrained();
             $table->decimal('price', 15, 2);
             $table->timestamps();
         });
