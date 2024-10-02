@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Branch;
 use App\Models\Fiscal\{Cfop, FiscalDepartment, Icms};
+use App\Models\{Branch, Product};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +14,7 @@ return new class() extends Migration {
     {
         Schema::create('sku_warehouse_stock_movements', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignId('sku_id')->constrained('sku_units')->onDelete('cascade');
+            $table->foreignIdFor(Product::class)->constrained()->onDelete('cascade');
             $table->foreignIdFor(Branch::class, 'origin_branch_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignIdFor(Branch::class, 'destination_branch_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignIdFor(FiscalDepartment::class)->constrained()->onDelete('cascade');

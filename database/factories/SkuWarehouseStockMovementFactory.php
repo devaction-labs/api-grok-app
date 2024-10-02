@@ -18,7 +18,7 @@ class SkuWarehouseStockMovementFactory extends Factory
     public function definition(): array
     {
         return [
-            'sku_id'        => ProductFactory::new(),
+            'product_id'    => ProductFactory::new(),
             'warehouse_id'  => WarehouseFactory::new(),
             'batch_id'      => BatchFactory::new(),
             'movement_type' => $this->faker->randomElement(['in', 'out']),

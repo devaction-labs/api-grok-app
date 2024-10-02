@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
- * @property string $sku_id
+ * @property string $product_id
  * @property string $fiscal_department_id
  * @property string $cfop_id
  * @property string $icms_id
