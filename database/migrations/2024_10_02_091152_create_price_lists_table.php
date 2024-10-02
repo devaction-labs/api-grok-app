@@ -20,7 +20,7 @@ return new class() extends Migration {
 
         // Pivot table for price_list and sku_units
         Schema::create('price_list_sku', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
             $table->foreignId('sku_id')->constrained('sku_units');
             $table->foreignId('price_list_id')->constrained('price_lists');
             $table->decimal('price', 15, 2);

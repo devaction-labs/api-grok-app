@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Warehouse;
+use App\Models\Branch;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Warehouse>
+ * @extends Factory<Branch>
  */
-class WarehouseFactory extends Factory
+class BranchFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,8 +20,8 @@ class WarehouseFactory extends Factory
         return [
             'name'        => $this->faker->name,
             'description' => $this->faker->sentence,
+            'location'    => $this->faker->address,
             'tenant_id'   => TenantFactory::new(),
-            'branch_id'   => BranchFactory::new(),
         ];
     }
 }

@@ -38,4 +38,14 @@ class Warehouse extends Model
     {
         return $this->hasMany(SkuWarehouseStock::class);
     }
+
+    public function stockMovements(): HasMany
+    {
+        return $this->hasMany(SkuWarehouseStockMovement::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
 }
