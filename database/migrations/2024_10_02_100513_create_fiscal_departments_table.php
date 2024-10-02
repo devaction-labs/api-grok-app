@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\{Branch, Customer, Tenant};
+use App\Models\{Branch, Cnpja\Company, Tenant};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,15 +11,12 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('fiscal_departments', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignIdFor(Tenant::class)->constrained();
-            $table->foreignIdFor(Customer::class)->constrained();
             $table->foreignIdFor(Branch::class)->constrained();
-            $table->string('order_number')->unique();
-            $table->string('status');
-            $table->decimal('total_amount');
-            $table->string('order_type');
+            $table->foreignIdFor(Company::class)->constrained();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -29,6 +26,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('fiscal_departments');
     }
 };
