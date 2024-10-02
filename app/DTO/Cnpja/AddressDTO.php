@@ -5,17 +5,30 @@ namespace App\DTO\Cnpja;
 readonly class AddressDTO
 {
     public function __construct(
-        public ?int $municipalityCode,
-        public ?string $street,
-        public ?string $number,
-        public ?string $details,
-        public ?string $district,
-        public ?string $city,
-        public ?string $state,
-        public ?string $zip,
+        public ?int       $municipalityCode,
+        public ?string    $street,
+        public ?string    $number,
+        public ?string    $details,
+        public ?string    $district,
+        public ?string    $city,
+        public ?string    $state,
+        public ?string    $zip,
         public CountryDTO $country
     ) {}
 
+    /**
+     * @param array{
+     *     municipality: int,
+     *      street: string,
+     *      number: string,
+     *      details: string,
+     *      district: string,
+     *      city: string,
+     *      state: string,
+     *      zip: string,
+     *      country: array<string, mixed>
+     * } $data
+     */
     public static function fromArray(array $data): self
     {
         return new self(

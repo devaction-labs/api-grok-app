@@ -21,7 +21,7 @@ class TenantFactory extends Factory
             'name'      => $this->faker->name,
             'tax_id'    => $this->faker->unique()->uuid,
             'slug'      => $this->faker->slug,
-            'domain'    => $this->faker->domainName,
+            'domain'    => $this->faker->unique()->domainName,
             'is_active' => true,
         ];
     }

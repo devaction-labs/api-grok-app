@@ -7,6 +7,9 @@ use Closure;
 
 class CreateTenantPipeline
 {
+    /**
+     * @param array<string, mixed> $request
+     */
     public function handle(array $request, Closure $next): mixed
     {
         $tenant = Tenant::query()->firstOrCreate(

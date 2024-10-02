@@ -9,6 +9,9 @@ readonly class ActivityDTO
         public ?string $text
     ) {}
 
+    /**
+     * @param array{id: int, text: string} $data
+     */
     public static function fromArray(array $data): self
     {
         return new self(

@@ -4,12 +4,14 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Contracts\Cnpja\HasCnpjData;
+use App\Models\Permission\Role;
 use App\Models\Scopes\TenantScope;
 use App\Models\Traits\HasCnpjDataTrait;
+use App\Permission\HasRoles;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -24,6 +26,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $tenant_id
+ * @property string $roles
  */
 class User extends Authenticatable implements HasCnpjData
 {
@@ -32,6 +35,7 @@ class User extends Authenticatable implements HasCnpjData
     use HasUlids;
     use HasApiTokens;
     use HasCnpjDataTrait;
+    use HasRoles;
 
     /**
      * The attributes that should be hidden for serialization.
@@ -64,6 +68,20 @@ class User extends Authenticatable implements HasCnpjData
     }
 
     /**
+     * The roles that belong to the user.
+     *
+     * @return BelongsToMany<Role>
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class)
+            ->where(function ($query) {
+                $query->whereNull('tenant_id')
+                ->orWhere('tenant_id', $this->tenant_id);
+            });
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -75,4 +93,5 @@ class User extends Authenticatable implements HasCnpjData
             'password'          => 'hashed',
         ];
     }
+
 }

@@ -39,6 +39,9 @@ abstract class CnpjDataModel extends Model implements HasCnpjData
         return $this->morphMany(Activity::class, 'entity');
     }
 
+    /**
+     * @return MorphMany<Person>
+     */
     public function people(): MorphMany
     {
         return $this->morphMany(Person::class, 'entity');

@@ -10,6 +10,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OnboardingController extends Controller
 {
+    /**
+     * Create a new account.
+     *
+     * @param OnboardingRequest $request
+     * @return JsonResponse
+     */
     public function __invoke(OnboardingRequest $request): JsonResponse
     {
 
