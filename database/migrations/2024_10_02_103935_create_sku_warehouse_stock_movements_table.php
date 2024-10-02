@@ -18,12 +18,12 @@ return new class() extends Migration {
             $table->foreignIdFor(Branch::class, 'origin_branch_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignIdFor(Branch::class, 'destination_branch_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignIdFor(FiscalDepartment::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Cfop::class)->nullable()->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Icms::class)->nullable()->constrained()->onDelete('cascade');
             $table->integer('quantity');
             $table->enum('movement_type', ['transfer', 'internal', 'sale', 'adjustment']);
             $table->string('batch_number')->nullable();
             $table->string('status')->nullable();
-            $table->foreignIdFor(Cfop::class)->nullable()->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Icms::class)->nullable()->constrained()->onDelete('cascade');
             $table->decimal('tax_value', 15, 2)->nullable();
             $table->decimal('base_value', 15, 2);
             $table->text('remarks')->nullable();
